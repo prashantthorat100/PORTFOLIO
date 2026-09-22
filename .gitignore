@@ -1,0 +1,17 @@
+# === PRIVATE / SENSITIVE FILES — DO NOT PUSH ===
+
+# Passport photo and Resume PDF
+IMAGES/
+
+# Local environment variables
+.env
+
+# Local JS config with real file paths
+js/config.js
+
+# OS & Editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/settings.json

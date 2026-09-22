@@ -4,6 +4,8 @@
  * Third-Year Computer Engineering Student at VIT Pune (CS / AI)
  */
 
+import { PASSPORT_IMAGE_PATH, RESUME_PATH } from './config.js';
+
 export const personalInfo = {
   name: "Prashant Thorat",
   role: "Computer Engineering Student",
@@ -19,8 +21,8 @@ export const personalInfo = {
   email: "prashant.workemail0@gmail.com",
   github: "https://github.com/prashantthorat100",
   linkedin: "https://linkedin.com/in/prashant-thorat-6b1165401",
-  resumeUrl: "IMAGES/Prashant_Thorat_Resume.pdf",
-  avatarUrl: "IMAGES/PassportSize Image.png",
+  resumeUrl: RESUME_PATH,
+  avatarUrl: PASSPORT_IMAGE_PATH,
   status: "Open to Software Engineering & AI Opportunities",
   graduationYear: "2028"
 };
