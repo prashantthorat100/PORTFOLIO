@@ -13,33 +13,33 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Theme: Dark (Default) */
-  --bg-primary: #090d16;
-  --bg-secondary: #0f172a;
-  --bg-tertiary: #172238;
-  --bg-card: rgba(15, 23, 42, 0.75);
-  --bg-card-hover: rgba(26, 38, 64, 0.85);
-  --bg-glass: rgba(9, 13, 22, 0.82);
+  --bg-primary: #0d1117;
+  --bg-secondary: #141d26;
+  --bg-tertiary: #1c2a34;
+  --bg-card: rgba(20, 29, 38, 0.82);
+  --bg-card-hover: rgba(28, 38, 48, 0.94);
+  --bg-glass: rgba(13, 17, 23, 0.82);
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-accent: #818cf8;
+  --text-primary: #edf3f7;
+  --text-secondary: #b4c0cd;
+  --text-muted: #8998a8;
+  --text-accent: #d9b18a;
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.15);
-  --border-focus: rgba(99, 102, 241, 0.6);
+  --border-subtle: rgba(180, 192, 205, 0.11);
+  --border-medium: rgba(180, 192, 205, 0.16);
+  --border-focus: rgba(217, 177, 138, 0.42);
 
-  --accent-primary: #6366f1;       /* Indigo */
-  --accent-primary-hover: #4f46e5;
-  --accent-secondary: #06b6d4;     /* Cyan */
-  --accent-emerald: #10b981;       /* Emerald */
-  --accent-amber: #f59e0b;         /* Amber */
-  --accent-rose: #f43f5e;          /* Rose */
+  --accent-primary: #c89b6b;       /* Warm Bronze */
+  --accent-primary-hover: #b7885d;
+  --accent-secondary: #97aeb9;     /* Soft Steel */
+  --accent-emerald: #7cc2ba;       /* Muted Teal */
+  --accent-amber: #d79d59;         /* Soft Gold */
+  --accent-rose: #de7b7b;          /* Dusty Rose */
 
-  --glow-primary: rgba(99, 102, 241, 0.18);
-  --glow-accent: rgba(6, 182, 212, 0.15);
-  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --shadow-hover: 0 20px 40px -15px rgba(99, 102, 241, 0.2);
+  --glow-primary: rgba(200, 155, 107, 0.14);
+  --glow-accent: rgba(151, 174, 185, 0.08);
+  --shadow-card: 0 18px 35px -20px rgba(2, 6, 15, 0.8);
+  --shadow-hover: 0 22px 42px -20px rgba(200, 155, 107, 0.18);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -57,26 +57,26 @@
 
 /* Light Theme */
 [data-theme="light"] {
-  --bg-primary: #f8fafc;
+  --bg-primary: #f4f7f6;
   --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
+  --bg-tertiary: #edf3f1;
   --bg-card: rgba(255, 255, 255, 0.9);
   --bg-card-hover: #ffffff;
-  --bg-glass: rgba(248, 250, 252, 0.88);
+  --bg-glass: rgba(255, 255, 255, 0.8);
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-accent: #4f46e5;
+  --text-primary: #17212c;
+  --text-secondary: #4f5d6d;
+  --text-muted: #728197;
+  --text-accent: #1f5f6a;
 
-  --border-subtle: rgba(15, 23, 42, 0.08);
-  --border-medium: rgba(15, 23, 42, 0.15);
-  --border-focus: rgba(79, 70, 229, 0.6);
+  --border-subtle: rgba(23, 33, 44, 0.08);
+  --border-medium: rgba(23, 33, 44, 0.14);
+  --border-focus: rgba(31, 95, 106, 0.45);
 
-  --glow-primary: rgba(99, 102, 241, 0.08);
-  --glow-accent: rgba(6, 182, 212, 0.08);
-  --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
-  --shadow-hover: 0 20px 35px -10px rgba(99, 102, 241, 0.12);
+  --glow-primary: rgba(31, 95, 106, 0.08);
+  --glow-accent: rgba(142, 201, 195, 0.08);
+  --shadow-card: 0 12px 28px -18px rgba(15, 23, 42, 0.12);
+  --shadow-hover: 0 22px 40px -20px rgba(31, 95, 106, 0.12);
 }
 
 /* --- Global Reset & Base Styles --- */
@@ -264,9 +264,9 @@ img {
   font-weight: 600;
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  background: rgba(99, 102, 241, 0.12);
+  background: rgba(29, 117, 128, 0.12);
   color: var(--accent-primary);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(29, 117, 128, 0.25);
 }
 
 .nav-menu {
@@ -484,8 +484,8 @@ img {
 
 .avatar-wrapper {
   position: relative;
-  width: 320px;
-  height: 380px;
+  width: 240px;
+  height: 290px;
   border-radius: var(--radius-xl);
   overflow: hidden;
   background: var(--bg-secondary);
@@ -569,12 +569,12 @@ img {
 .btn-primary {
   background: var(--accent-primary);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 14px rgba(29, 117, 128, 0.32);
 }
 
 .btn-primary:hover {
   background: var(--accent-primary-hover);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 6px 20px rgba(29, 117, 128, 0.45);
   transform: translateY(-1px);
 }
 
@@ -599,7 +599,7 @@ img {
 .btn-outline:hover {
   border-color: var(--border-focus);
   color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(29, 117, 128, 0.05);
 }
 
 .btn-sm {
@@ -713,12 +713,12 @@ img {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-md);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(29, 117, 128, 0.1);
   color: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(29, 117, 128, 0.2);
 }
 
 .skill-card-icon svg {
@@ -760,8 +760,8 @@ img {
 }
 
 .skill-badge.highlight {
-  border-color: rgba(99, 102, 241, 0.35);
-  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(29, 117, 128, 0.35);
+  background: rgba(29, 117, 128, 0.08);
   color: var(--accent-primary);
   font-weight: 600;
 }
@@ -801,7 +801,7 @@ img {
   background: var(--accent-primary);
   color: #ffffff;
   border-color: var(--accent-primary);
-  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 2px 10px rgba(29, 117, 128, 0.3);
 }
 
 .projects-grid {
@@ -1144,13 +1144,13 @@ img {
   width: 42px;
   height: 42px;
   border-radius: var(--radius-md);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(29, 117, 128, 0.1);
   color: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(29, 117, 128, 0.2);
 }
 
 .highlight-icon-box svg {
@@ -1265,7 +1265,7 @@ img {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-sm);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(29, 117, 128, 0.1);
   color: var(--accent-primary);
   display: flex;
   align-items: center;
@@ -1345,7 +1345,7 @@ img {
 .form-textarea:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(29, 117, 128, 0.15);
 }
 
 .form-textarea {

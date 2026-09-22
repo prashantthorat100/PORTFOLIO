@@ -8,18 +8,18 @@ export const personalInfo = {
   name: "Prashant Thorat",
   role: "Computer Engineering Student",
   specialization: "Full-Stack Developer | AI Enthusiast | Java & Problem Solving",
-  tagline: "Third-year engineering student at VIT Pune passionate about building scalable web applications, AI-powered systems, and solving real-world problems through technology.",
+  tagline: "Engineering student (2024–2028) at VIT Pune, building scalable web apps, AI-powered systems, and practical solutions for real-world problems.",
   institution: "Vishwakarma Institute of Technology (VIT Pune)",
   degree: "Bachelor of Technology (B.Tech)",
   branch: "Computer Science / Artificial Intelligence",
-  year: "Third Year",
+  year: "Batch 2024–2028",
   location: "Pune, Maharashtra, India",
   phone: "8591092251",
   displayPhone: "+91 85910 92251",
   email: "prashant.workemail0@gmail.com",
   github: "https://github.com/prashantthorat100",
   linkedin: "https://linkedin.com/in/prashant-thorat-6b1165401",
-  resumeUrl: "#resume",
+  resumeUrl: "IMAGES/Prashant_Thorat_Resume.pdf",
   avatarUrl: "IMAGES/PassportSize Image.png",
   status: "Open to Software Engineering & AI Opportunities",
   graduationYear: "2028"
@@ -27,9 +27,9 @@ export const personalInfo = {
 
 export const aboutData = {
   summary: [
-    "I am a third-year Computer Engineering student at Vishwakarma Institute of Technology (VIT Pune), specializing in Computer Science and Artificial Intelligence. My primary engineering focus revolves around Full-Stack Web Development, practical Artificial Intelligence, and rigorous algorithmic problem solving with Java.",
-    "Rather than just learning syntax, I focus on building practical, real-world software—from patent-backed computer vision detection systems and MERN stack platforms to dedicated productivity tools for engineering students. I am actively developing production-grade projects to deepen my understanding of distributed systems, scalable architectures, and clean software engineering principles.",
-    "Currently, I am actively preparing for software engineering and product-company internship and full-time opportunities, continually strengthening my foundation in Data Structures, Algorithms, system design fundamentals, and full-stack engineering."
+    "I am a Computer Engineering student at VIT Pune, graduating in 2028, with a focus on Computer Science and Artificial Intelligence. My work centers on Full-Stack Development, AI applications, and Java-based problem solving.",
+    "I build practical software projects that solve real challenges, from computer vision ideas and MERN web platforms to productivity tools for students. I enjoy turning concepts into working systems that are clean, scalable, and useful.",
+    "I am actively preparing for internship and software engineering opportunities while strengthening my foundation in Data Structures, Algorithms, and full-stack development."
   ],
   quickStats: [
     { label: "Academic Standing", value: "3rd Year B.Tech", note: "VIT Pune (CS / AI)" },
@@ -294,17 +294,16 @@ export const educationData = {
   degree: "Bachelor of Technology (B.Tech)",
   branch: "Computer Science / Artificial Intelligence",
   status: "Third Year (Current Student)",
-  period: "2023 - 2026",
+  period: "2024 - 2028",
   location: "Pune, Maharashtra, India",
-  description: "Pursuing rigorous undergraduate education in Computer Engineering with specialized coursework in Artificial Intelligence, Data Structures, Operating Systems, Database Management Systems, and Software Engineering. Actively applying theoretical foundations to real-world software and AI projects.",
+  description: "Pursuing a B.Tech in Computer Engineering with focused coursework in Artificial Intelligence, Data Structures, Operating Systems, Database Management Systems, and related engineering fundamentals. Applying academic knowledge to practical software and AI projects.",
   coursework: [
     "Data Structures & Algorithms",
     "Artificial Intelligence & Machine Learning",
     "Object-Oriented Programming (Java)",
     "Database Management Systems",
     "Computer Networks",
-    "Operating Systems",
-    "Software Engineering Methodologies"
+    "Operating Systems"
   ]
 };
 

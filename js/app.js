@@ -495,7 +495,19 @@ function initContactActions() {
 
   if (heroResumeBtn) {
     heroResumeBtn.addEventListener('click', () => {
-      showToast('Resume link placeholder. You can link your resume PDF in data.js under resumeUrl.', 'info');
+      const resumeUrl = personalInfo.resumeUrl;
+      if (!resumeUrl || resumeUrl === '#resume') {
+        showToast('Resume file not available yet.', 'info');
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.href = resumeUrl;
+      link.download = 'Prashant_Thorat_Resume.pdf';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
   }
 
