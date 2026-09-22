@@ -1,10 +1,9 @@
-# === PRIVATE / SENSITIVE FILES — DO NOT PUSH ===
+# === PRIVATE / SENSITIVE FILES ï¿½ DO NOT PUSH ===
 
 # Passport photo and Resume PDF
-IMAGES/
+
 
 # Local environment variables
-.env
 
 # Local JS config with real file paths
 js/config.js
