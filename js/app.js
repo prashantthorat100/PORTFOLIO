@@ -55,7 +55,6 @@ const copyPhoneBtn = document.getElementById('copyPhoneBtn');
 const copyEmailBtn = document.getElementById('copyEmailBtn');
 const contactForm = document.getElementById('contactForm');
 const heroResumeBtn = document.getElementById('heroResumeBtn');
-const heroAvatarImg = document.getElementById('heroAvatarImg');
 
 /* Current Active Filter State */
 let activeProjectFilter = 'all';
@@ -542,11 +541,6 @@ function initApp() {
   initMobileMenu();
   initModalEvents();
   initContactActions();
-
-  // Set avatar image src from config (gitignored)
-  if (heroAvatarImg && personalInfo.avatarUrl) {
-    heroAvatarImg.src = personalInfo.avatarUrl;
-  }
 
   // Render modular data components
   renderAbout();
