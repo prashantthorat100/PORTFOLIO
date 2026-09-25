@@ -131,7 +131,8 @@ export const projectsData = [
     isFeatured: true,
     githubUrl: "https://github.com/prashantthorat100/WILD-TRACK.git",
     demoUrl: null, // Coming soon
-    hasPatentDoc: true
+    hasPatentDoc: true,
+    patentDocUrl: "IMAGES/Patent-Docu.pdf"
   },
   {
     id: "wanderlust",
@@ -316,7 +317,9 @@ export const highlightsData = [
   {
     icon: "award",
     title: "Patent-Related Project Work",
-    description: "Conducted innovation and prepared technical documentation for an AI-powered animal detection and mobile alerting system."
+    description: "Conducted innovation and prepared technical documentation for an AI-powered animal detection and mobile alerting system.",
+    linkUrl: "IMAGES/Patent-Docu.pdf",
+    linkText: "View Patent Document (PDF) ↗"
   },
   {
     icon: "code",

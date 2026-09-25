@@ -27,7 +27,8 @@ const icons = {
   eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
   bookOpen: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
   externalLink: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`,
-  github: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>`
+  github: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>`,
+  fileText: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
 };
 
 /* --- DOM Elements --- */
@@ -275,16 +276,23 @@ function renderProjects(filter = 'all') {
             <span>GitHub</span>
           </a>
 
+          ${project.patentDocUrl ? `
+            <a href="${project.patentDocUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" title="View Patent Document (PDF)">
+              ${icons.fileText}
+              <span>Patent Doc</span>
+            </a>
+          ` : ''}
+
           ${project.demoUrl ? `
             <a href="${project.demoUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
               <span>Live Demo</span>
               ${icons.externalLink}
             </a>
-          ` : `
+          ` : (!project.patentDocUrl ? `
             <button class="btn btn-disabled btn-sm" title="Deployment in progress">
               <span>Demo — Coming Soon</span>
             </button>
-          `}
+          ` : '')}
 
           <button class="btn ${isPatentProject ? 'btn-primary' : 'btn-outline'} btn-sm view-details-btn" data-id="${project.id}">
             <span>${isPatentProject ? 'Patent Details' : 'Details'}</span>
@@ -319,8 +327,17 @@ function openProjectModal(projectId) {
   modalBody.innerHTML = `
     ${project.patentNote ? `
       <div class="modal-callout">
-        <strong>Patent & Innovation Status:</strong> ${project.patentStatus || 'Patent Filed / Proof Available'}
-        <div style="margin-top: 6px; font-size: 0.85rem; color: var(--text-primary);">${project.patentNote}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <strong>Patent & Innovation Status:</strong> ${project.patentStatus || 'Patent Filed / Proof Available'}
+          </div>
+          ${project.patentDocUrl ? `
+            <a href="${project.patentDocUrl}" target="_blank" rel="noopener noreferrer" class="badge-tag badge-patent" style="text-decoration: none; padding: 4px 10px; font-weight: 600;">
+              ${icons.fileText} View Patent Doc (PDF) ↗
+            </a>
+          ` : ''}
+        </div>
+        <div style="margin-top: 8px; font-size: 0.85rem; color: var(--text-primary);">${project.patentNote}</div>
       </div>
     ` : ''}
 
@@ -352,18 +369,24 @@ function openProjectModal(projectId) {
       </div>
     </div>
 
-    <div style="display: flex; gap: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 18px;">
+    <div style="display: flex; gap: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 18px; flex-wrap: wrap;">
       <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
         ${icons.github}
         <span>GitHub Repository</span>
       </a>
+      ${project.patentDocUrl ? `
+        <a href="${project.patentDocUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+          ${icons.fileText}
+          <span>Patent Document (PDF)</span>
+        </a>
+      ` : ''}
       ${project.demoUrl ? `
         <a href="${project.demoUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
           <span>Live Demo</span>
         </a>
-      ` : `
+      ` : (!project.patentDocUrl ? `
         <button class="btn btn-disabled btn-sm">Live Demo — Coming Soon</button>
-      `}
+      ` : '')}
     </div>
   `;
 
@@ -450,6 +473,12 @@ function renderHighlights() {
         <div>
           <h3 class="highlight-title">${item.title}</h3>
           <p class="highlight-desc">${item.description}</p>
+          ${item.linkUrl ? `
+            <a href="${item.linkUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display: inline-flex; margin-top: 10px; padding: 5px 12px; font-size: 0.8rem;">
+              ${icons.fileText}
+              <span>${item.linkText || 'View Document'}</span>
+            </a>
+          ` : ''}
         </div>
       </div>
     `;
