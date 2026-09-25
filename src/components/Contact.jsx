@@ -42,6 +42,10 @@ export default function Contact({ onShowToast, showHeader = true }) {
         body: JSON.stringify(formData)
       });
 
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('The contact service returned an invalid response');
+      }
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -52,8 +56,7 @@ export default function Contact({ onShowToast, showHeader = true }) {
       }
     } catch (err) {
       console.warn('API submission note:', err);
-      // Friendly fallback if Express server is temporarily offline
-      onShowToast(`Thank you, ${formData.name}! (Offline mode) Opening email client...`, 'success');
+      onShowToast('The contact service is unavailable. Opening your email app instead.', 'info');
       const mailtoUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
       )}`;
