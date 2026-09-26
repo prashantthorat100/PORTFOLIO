@@ -17,6 +17,7 @@ export const personalInfo = {
   phone: "8591092251",
   displayPhone: "+91 85910 92251",
   email: "prashant.workemail0@gmail.com",
+  gmailUrl: "https://mail.google.com/mail/?view=cm&fs=1&to=prashant.workemail0@gmail.com",
   github: "https://github.com/prashantthorat100",
   linkedin: "https://linkedin.com/in/prashant-thorat-6b1165401",
   resumeUrl: "/IMAGES/Prashant_Thorat_Resume.pdf",

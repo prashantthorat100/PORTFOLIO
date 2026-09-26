@@ -64,7 +64,7 @@ export default function Hero({ onShowToast }) {
             <div className="hero-social-bar">
               <span className="social-label">Connect:</span>
               <div className="social-links">
-                <a href={`mailto:${personalInfo.email}`} className="social-btn" title="Email Prashant" aria-label="Send Email">
+                <a href={personalInfo.gmailUrl} target="_blank" rel="noopener noreferrer" className="social-btn" title="Email Prashant via Gmail" aria-label="Send Email via Gmail">
                   <MailIcon size={18} />
                 </a>
                 <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="social-btn" title="GitHub Profile" aria-label="GitHub">

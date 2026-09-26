@@ -79,11 +79,11 @@ export default function HomePage({ onOpenModal, onShowToast }) {
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/contact" className="btn btn-primary">
-              <span>Send a Message</span>
+              <span>Let's Connect</span>
               <ArrowRightIcon size={16} />
             </Link>
-            <a href={`mailto:${personalInfo.email}`} className="btn btn-outline">
-              Direct Email
+            <a href={personalInfo.gmailUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <span>Email via Gmail</span>
             </a>
           </div>
         </div>

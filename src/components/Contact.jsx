@@ -1,121 +1,65 @@
 import React, { useState } from 'react';
 import { personalInfo } from '../data/portfolioData';
-import { PhoneIcon, MailIcon, MapPinIcon, SendIcon, CheckIcon, WhatsAppIcon, GmailIcon, CopyIcon } from './Icons';
+import { PhoneIcon, MailIcon, MapPinIcon, WhatsAppIcon, GmailIcon, CopyIcon, ArrowRightIcon } from './Icons';
 
 export default function Contact({ onShowToast, showHeader = true }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState('Internship Opportunity');
+  const [customSubject, setCustomSubject] = useState('');
+  const [quickNote, setQuickNote] = useState('');
 
   const handleCopy = (text, type) => {
     navigator.clipboard.writeText(text).then(() => {
       onShowToast(`Copied ${type} (${text}) to clipboard!`, 'success');
     }).catch(() => {
-      onShowToast(`Could not auto-copy. Details: ${text}`, 'info');
+      onShowToast(`Email address: ${text}`, 'info');
     });
   };
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    if (submitError) setSubmitError(null);
+  const emailTemplates = [
+    {
+      id: 'internship',
+      label: '💼 Internship Opportunity',
+      subject: 'Internship Opportunity | Prashant Thorat - VIT Pune',
+      body: `Hi Prashant,\n\nI reviewed your portfolio and would like to discuss a Software Engineering / Full-Stack internship opportunity at our organization.\n\nLooking forward to speaking with you!`
+    },
+    {
+      id: 'collaboration',
+      label: '🚀 Project Collaboration',
+      subject: 'Project Collaboration / AI Development Inquiry',
+      body: `Hi Prashant,\n\nI was impressed by your projects and would like to collaborate with you on a tech / AI project.\n\nLet's connect!`
+    },
+    {
+      id: 'general',
+      label: '💬 General Tech Connect',
+      subject: 'Connecting from Portfolio | Tech Inquiry',
+      body: `Hi Prashant,\n\nI came across your portfolio and wanted to connect with you regarding your work in Computer Science and Artificial Intelligence.`
+    }
+  ];
+
+  const getActiveSubject = () => {
+    if (customSubject.trim()) return customSubject.trim();
+    const template = emailTemplates.find(t => t.label === selectedTopic);
+    return template ? template.subject : 'Portfolio Inquiry | Prashant Thorat';
   };
 
-  const getGmailWebUrl = (customSubject, customBody) => {
-    const sub = encodeURIComponent(customSubject || formData.subject || 'Portfolio Inquiry');
-    const body = encodeURIComponent(
-      customBody || (formData.name ? `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}` : 'Hi Prashant,\n\nI came across your portfolio and would like to connect.')
-    );
+  const getActiveBody = () => {
+    if (quickNote.trim()) return quickNote.trim();
+    const template = emailTemplates.find(t => t.label === selectedTopic);
+    return template ? template.body : `Hi Prashant,\n\nI came across your portfolio and would like to get in touch with you.`;
+  };
+
+  const getGmailComposeUrl = () => {
+    const sub = encodeURIComponent(getActiveSubject());
+    const body = encodeURIComponent(getActiveBody());
     return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(personalInfo.email)}&su=${sub}&body=${body}`;
   };
 
-  const getMailtoUrl = (customSubject, customBody) => {
-    const sub = encodeURIComponent(customSubject || formData.subject || 'Portfolio Inquiry');
-    const body = encodeURIComponent(
-      customBody || (formData.name ? `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}` : 'Hi Prashant,\n\nI came across your portfolio and would like to connect.')
-    );
-    return `mailto:${personalInfo.email}?subject=${sub}&body=${body}`;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      onShowToast('Please fill out all required fields (Name, Email, Message).', 'error');
-      return;
+  const handleLaunchGmail = () => {
+    const url = getGmailComposeUrl();
+    window.open(url, '_blank', 'noopener,noreferrer');
+    if (onShowToast) {
+      onShowToast('Opening Gmail Web compose window...', 'success');
     }
-
-    setIsSubmitting(true);
-    setSubmitError(null);
-
-    const payload = {
-      name: formData.name.trim(),
-      email: formData.email.trim(),
-      _replyto: formData.email.trim(),
-      subject: formData.subject ? formData.subject.trim() : `New Inquiry from ${formData.name.trim()}`,
-      _subject: `[Portfolio Direct Message] ${formData.subject ? formData.subject.trim() : 'From ' + formData.name.trim()}`,
-      message: formData.message.trim(),
-      _template: 'table',
-      _captcha: 'false'
-    };
-
-    try {
-      // Primary direct email dispatch via FormSubmit (delivers directly to personalInfo.email)
-      const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(personalInfo.email)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await response.json();
-
-      if (response.ok && (data.success === 'true' || data.success === true)) {
-        setIsSubmitted(true);
-        onShowToast(`Message sent successfully! It has been dispatched to Prashant's Gmail (${personalInfo.email}).`, 'success');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      } else {
-        throw new Error(data.message || 'Form delivery service returned an error.');
-      }
-    } catch (err) {
-      console.warn('Direct delivery attempt:', err);
-      // Try local/server proxy if available
-      try {
-        const localResponse = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const localData = await localResponse.json();
-        if (localResponse.ok && localData.success) {
-          setIsSubmitted(true);
-          onShowToast('Message delivered successfully to Prashant!', 'success');
-          setFormData({ name: '', email: '', subject: '', message: '' });
-          setIsSubmitting(false);
-          return;
-        }
-      } catch (localErr) {
-        // Continue to fallback error state
-      }
-
-      setSubmitError('Unable to deliver directly via network. Please use 1-Click Gmail Web or Email Client below:');
-      onShowToast('Direct dispatch could not complete. You can send instantly via Gmail Web!', 'info');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleResetForm = () => {
-    setIsSubmitted(false);
-    setSubmitError(null);
-    setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
   return (
@@ -126,24 +70,24 @@ export default function Contact({ onShowToast, showHeader = true }) {
             <div className="section-eyebrow">GET IN TOUCH</div>
             <h2 className="section-title">Let's Build <span className="text-gradient">Something Together</span></h2>
             <p className="section-description">
-              I'm always interested in connecting with developers, recruiters, builders, and people working on interesting technology projects.
+              Reach out directly via Gmail or WhatsApp. I am always open to discussing internship opportunities, AI collaborations, and software projects.
             </p>
           </div>
         )}
 
         <div className="contact-grid">
-          {/* Left: Direct Details & Instant Copy */}
+          {/* Left: Direct Contact Information */}
           <div className="contact-info-panel">
             <p className="contact-lead-text">
-              Whether you are looking for an ambitious software engineering intern, exploring an AI collaboration, or simply wish to connect, feel free to reach out directly.
+              Whether you are looking for an ambitious software engineering intern at VIT Pune, exploring an AI collaboration, or simply wish to connect, feel free to reach out directly.
             </p>
 
             <div className="contact-cards">
-              {/* Email Card */}
+              {/* Direct Gmail Card */}
               <div className="contact-item-card">
                 <div className="contact-item-left">
-                  <div className="contact-icon-box">
-                    <MailIcon size={18} />
+                  <div className="contact-icon-box" style={{ background: 'rgba(234, 67, 53, 0.12)', color: '#ea4335' }}>
+                    <GmailIcon size={20} />
                   </div>
                   <div>
                     <div className="contact-item-label">Direct Email (Gmail)</div>
@@ -165,11 +109,11 @@ export default function Contact({ onShowToast, showHeader = true }) {
               {/* Phone / WhatsApp Card */}
               <div className="contact-item-card">
                 <div className="contact-item-left">
-                  <div className="contact-icon-box">
-                    <PhoneIcon size={18} />
+                  <div className="contact-icon-box" style={{ background: 'rgba(37, 211, 102, 0.12)', color: '#25d366' }}>
+                    <WhatsAppIcon size={20} />
                   </div>
                   <div>
-                    <div className="contact-item-label">Phone / WhatsApp</div>
+                    <div className="contact-item-label">Phone & WhatsApp</div>
                     <div className="contact-item-val" id="contactPhoneText">{personalInfo.displayPhone}</div>
                   </div>
                 </div>
@@ -185,226 +129,198 @@ export default function Contact({ onShowToast, showHeader = true }) {
                 </button>
               </div>
 
-              {/* Location Card */}
+              {/* Current Base Card */}
               <div className="contact-item-card">
                 <div className="contact-item-left">
                   <div className="contact-icon-box">
-                    <MapPinIcon size={18} />
+                    <MapPinIcon size={20} />
                   </div>
                   <div>
-                    <div className="contact-item-label">Current Base</div>
+                    <div className="contact-item-label">Current Location</div>
                     <div className="contact-item-val">{personalInfo.location}</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Direct Connect Quick Actions */}
-            <div style={{ marginTop: '20px' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                QUICK DIRECT CHANNELS:
+            {/* Quick Actions & Social Handles */}
+            <div style={{ marginTop: '24px' }}>
+              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '12px' }}>
+                Quick Direct Connect:
               </div>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <a 
-                  href={getGmailWebUrl()} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="btn btn-primary" 
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                  title="Open Compose window in Gmail Web"
-                >
-                  <GmailIcon size={16} />
-                  <span>Open Gmail Web</span>
-                </a>
-                
                 <a 
                   href={`https://wa.me/91${personalInfo.phone}?text=${encodeURIComponent('Hi Prashant, I visited your portfolio and would like to connect with you!')}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="btn btn-secondary"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                  title="Chat directly on WhatsApp"
                 >
                   <WhatsAppIcon size={16} />
-                  <span>WhatsApp</span>
+                  <span>Chat on WhatsApp</span>
                 </a>
 
                 <a 
-                  href={getMailtoUrl()} 
+                  href={personalInfo.linkedin} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
                   className="btn btn-outline"
-                  title="Open in your default mail app"
                 >
-                  Email App
+                  LinkedIn
                 </a>
-              </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '12px', flexWrap: 'wrap' }}>
-                <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ fontSize: '0.85rem' }}>
-                  LinkedIn Profile
+                <a 
+                  href={personalInfo.github} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn btn-outline"
+                >
+                  GitHub
                 </a>
-                <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ fontSize: '0.85rem' }}>
-                  GitHub Profile
-                </a>
-                <a href="https://leetcode.com/u/prashantthorat100/" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ fontSize: '0.85rem' }}>
+
+                <a 
+                  href="https://leetcode.com/u/prashantthorat100/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn btn-outline"
+                >
                   LeetCode
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Right: Interactive Message Form */}
-          <div className="contact-form-card">
-            {isSubmitted ? (
-              <div style={{ textAlign: 'center', padding: '30px 10px' }}>
+          {/* Right: Dedicated Gmail Hub (No Outlook) */}
+          <div className="contact-form-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                 <div style={{ 
-                  width: '64px', 
-                  height: '64px', 
-                  borderRadius: '50%', 
-                  background: 'rgba(29, 117, 128, 0.15)', 
-                  color: 'var(--accent-primary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 20px auto',
-                  border: '2px solid var(--accent-primary)'
+                  width: '42px', 
+                  height: '42px', 
+                  borderRadius: '12px', 
+                  background: 'rgba(234, 67, 53, 0.15)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  color: '#ea4335' 
                 }}>
-                  <CheckIcon size={32} />
+                  <GmailIcon size={22} />
                 </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '10px' }}>
-                  Message Dispatched!
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', maxWidth: '440px', margin: '0 auto 24px auto' }}>
-                  Thank you for reaching out! Your message has been sent directly to Prashant's Gmail inbox (<strong style={{ color: 'var(--text-primary)' }}>{personalInfo.email}</strong>). He will get back to you shortly.
-                </p>
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <button 
-                    type="button" 
-                    className="btn btn-primary"
-                    onClick={handleResetForm}
-                  >
-                    Send Another Message
-                  </button>
-                  <a 
-                    href={getGmailWebUrl()} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="btn btn-outline"
-                  >
-                    Open in Gmail Web
-                  </a>
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>Email Me Directly via Gmail</h3>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                    Opens directly in your browser using Gmail
+                  </div>
                 </div>
               </div>
-            ) : (
-              <form id="contactForm" onSubmit={handleSubmit} noValidate>
-                <div style={{ marginBottom: '20px' }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '6px' }}>Send a Direct Message</h3>
-                  <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    Delivered instantly to <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{personalInfo.email}</span>
-                  </p>
+
+              {/* Template Selectors */}
+              <div style={{ marginBottom: '20px' }}>
+                <label className="form-label">Select Purpose / Topic:</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {emailTemplates.map((tpl) => (
+                    <button
+                      key={tpl.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedTopic(tpl.label);
+                        setCustomSubject('');
+                        setQuickNote('');
+                      }}
+                      style={{
+                        textAlign: 'left',
+                        padding: '10px 14px',
+                        borderRadius: 'var(--radius-md)',
+                        background: selectedTopic === tpl.label ? 'rgba(29, 117, 128, 0.15)' : 'var(--bg-secondary)',
+                        border: selectedTopic === tpl.label ? '1px solid var(--accent-primary)' : '1px solid var(--border-subtle)',
+                        color: selectedTopic === tpl.label ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        fontWeight: selectedTopic === tpl.label ? 600 : 400,
+                        cursor: 'pointer',
+                        transition: 'all var(--transition-fast)',
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      {tpl.label}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                {submitError && (
-                  <div style={{ 
-                    background: 'rgba(239, 68, 68, 0.1)', 
-                    border: '1px solid rgba(239, 68, 68, 0.3)', 
-                    borderRadius: 'var(--radius-md)', 
-                    padding: '12px 16px', 
-                    marginBottom: '20px',
-                    fontSize: '0.88rem',
-                    color: '#f87171'
-                  }}>
-                    <p style={{ marginBottom: '10px' }}>{submitError}</p>
-                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                      <a 
-                        href={getGmailWebUrl()} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="btn btn-primary"
-                        style={{ padding: '6px 14px', fontSize: '0.85rem' }}
-                      >
-                        Send via Gmail Web
-                      </a>
-                      <a 
-                        href={getMailtoUrl()} 
-                        className="btn btn-outline"
-                        style={{ padding: '6px 14px', fontSize: '0.85rem' }}
-                      >
-                        Default Mail App
-                      </a>
-                    </div>
-                  </div>
-                )}
+              {/* Optional Custom Subject */}
+              <div className="form-group" style={{ marginBottom: '16px' }}>
+                <label htmlFor="customSubject" className="form-label">Subject Line (Pre-filled):</label>
+                <input 
+                  type="text" 
+                  id="customSubject"
+                  className="form-input" 
+                  value={customSubject || getActiveSubject()} 
+                  onChange={(e) => setCustomSubject(e.target.value)}
+                  placeholder="Enter email subject"
+                />
+              </div>
 
-                <div className="form-group">
-                  <label htmlFor="formName" className="form-label">Your Name *</label>
-                  <input 
-                    type="text" 
-                    id="formName" 
-                    name="name" 
-                    className="form-input" 
-                    placeholder="e.g. Alex Johnson" 
-                    value={formData.name}
-                    onChange={handleChange}
-                    required 
-                  />
-                </div>
+              {/* Optional Message Preview */}
+              <div className="form-group" style={{ marginBottom: '24px' }}>
+                <label htmlFor="quickNote" className="form-label">Message Preview (Editable):</label>
+                <textarea 
+                  id="quickNote"
+                  className="form-textarea" 
+                  rows={4}
+                  value={quickNote || getActiveBody()} 
+                  onChange={(e) => setQuickNote(e.target.value)}
+                  placeholder="Message body"
+                  style={{ minHeight: '90px' }}
+                />
+              </div>
+            </div>
 
-                <div className="form-group">
-                  <label htmlFor="formEmail" className="form-label">Email Address *</label>
-                  <input 
-                    type="email" 
-                    id="formEmail" 
-                    name="email" 
-                    className="form-input" 
-                    placeholder="alex@company.com" 
-                    value={formData.email}
-                    onChange={handleChange}
-                    required 
-                  />
-                </div>
+            {/* Launch Action */}
+            <div>
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={handleLaunchGmail}
+                style={{ 
+                  width: '100%', 
+                  padding: '14px 20px', 
+                  fontSize: '1rem', 
+                  fontWeight: 700, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '10px',
+                  background: 'linear-gradient(135deg, #ea4335, #c5221f)',
+                  borderColor: '#ea4335',
+                  color: '#ffffff',
+                  boxShadow: '0 4px 14px rgba(234, 67, 53, 0.3)'
+                }}
+              >
+                <GmailIcon size={20} />
+                <span>Open in Gmail (Compose)</span>
+                <ArrowRightIcon size={16} />
+              </button>
 
-                <div className="form-group">
-                  <label htmlFor="formSubject" className="form-label">Subject</label>
-                  <input 
-                    type="text" 
-                    id="formSubject" 
-                    name="subject" 
-                    className="form-input" 
-                    placeholder="Internship / Project Collaboration / Tech Inquiry" 
-                    value={formData.subject}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="formMessage" className="form-label">Message *</label>
-                  <textarea 
-                    id="formMessage" 
-                    name="message" 
-                    className="form-textarea" 
-                    placeholder="Hi Prashant, I'd like to discuss an opportunity regarding..." 
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={4}
-                    required 
-                  />
-                </div>
-
-                <button 
-                  type="submit" 
-                  className="btn btn-primary" 
-                  style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }} 
-                  disabled={isSubmitting}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>
+                  ✅ Opens web browser Gmail — Never launches Outlook
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(personalInfo.email, 'email address')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--accent-primary)',
+                    fontSize: '0.8rem',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    padding: 0
+                  }}
                 >
-                  <span>{isSubmitting ? 'Sending to Gmail...' : 'Send Message'}</span>
-                  <SendIcon size={18} />
+                  Copy {personalInfo.email}
                 </button>
-
-                <div style={{ marginTop: '12px', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>
-                  🔒 Direct delivery to Prashant Thorat via secure SMTP / FormSubmit API
-                </div>
-              </form>
-            )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

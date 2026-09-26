@@ -40,7 +40,7 @@ export default function Footer() {
               <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="LinkedIn" style={{ width: '32px', height: '32px' }}>
                 <LinkedinIcon size={14} />
               </a>
-              <a href={`mailto:${personalInfo.email}`} className="social-btn" aria-label="Email" style={{ width: '32px', height: '32px' }}>
+              <a href={personalInfo.gmailUrl} target="_blank" rel="noopener noreferrer" className="social-btn" aria-label="Email via Gmail" title="Email Prashant via Gmail" style={{ width: '32px', height: '32px' }}>
                 <MailIcon size={14} />
               </a>
             </div>
