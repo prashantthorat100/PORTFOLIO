@@ -54,11 +54,46 @@ export default function Contact({ onShowToast, showHeader = true }) {
     return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(personalInfo.email)}&su=${sub}&body=${body}`;
   };
 
+<<<<<<< HEAD
   const handleLaunchGmail = () => {
     const url = getGmailComposeUrl();
     window.open(url, '_blank', 'noopener,noreferrer');
     if (onShowToast) {
       onShowToast('Opening Gmail Web compose window...', 'success');
+=======
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('The contact service returned an invalid response');
+      }
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        onShowToast(data.message || 'Message sent successfully! Prashant will reply soon.', 'success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        onShowToast(data.error || 'Failed to send message. Please reach out via direct email.', 'error');
+      }
+    } catch (err) {
+      console.warn('API submission note:', err);
+      onShowToast('The contact service is unavailable. Opening your email app instead.', 'info');
+      const mailtoUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      )}`;
+      window.location.href = mailtoUrl;
+    } finally {
+      setIsSubmitting(false);
+>>>>>>> 711f7c125c42b53d78b3d4b819576cb818c44675
     }
   };
 

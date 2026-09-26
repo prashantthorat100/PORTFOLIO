@@ -4,6 +4,14 @@
 
 
 # Local environment variables
+.env
+.env.*
+!.env.example
+
+# Installed dependencies and generated output
+node_modules/
+dist/
+.netlify/
 
 # Local JS config with real file paths
 js/config.js

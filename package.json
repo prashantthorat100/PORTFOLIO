@@ -7,14 +7,17 @@
     "dev": "concurrently -k -n \"CLIENT,SERVER\" -c \"cyan,magenta\" \"vite\" \"node server/server.js\"",
     "client": "vite",
     "server": "node server/server.js",
-    "build": "vite build",
+    "build": "node ./node_modules/vite/bin/vite.js build",
     "preview": "vite preview",
     "start": "node server/server.js"
   },
   "dependencies": {
+    "@netlify/database": "^2.0.1",
+    "@netlify/functions": "^6.0.0",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "drizzle-orm": "^1.0.0-beta.22",
     "express": "^4.21.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -25,6 +28,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
+    "drizzle-kit": "^1.0.0-beta.22",
     "vite": "^6.2.0"
   }
 }
