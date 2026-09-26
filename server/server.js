@@ -106,7 +106,7 @@ app.get('/api/leetcode', async (req, res) => {
 
 
 // Contact Form Submission API
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
 
@@ -126,6 +126,8 @@ app.post('/api/contact', (req, res) => {
       });
     }
 
+    const targetEmail = process.env.CONTACT_EMAIL || 'prashant.workemail0@gmail.com';
+
     const inquiry = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -138,9 +140,34 @@ app.post('/api/contact', (req, res) => {
     contactInquiries.push(inquiry);
     console.log(`[Contact Submission] Received from ${inquiry.name} <${inquiry.email}>: "${inquiry.subject}"`);
 
+    // Dispatch email to target Gmail via FormSubmit
+    try {
+      const emailRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: inquiry.name,
+          email: inquiry.email,
+          _replyto: inquiry.email,
+          subject: inquiry.subject,
+          _subject: `[Portfolio Server Contact] ${inquiry.subject} from ${inquiry.name}`,
+          message: inquiry.message,
+          _template: 'table',
+          _captcha: 'false'
+        })
+      });
+      const emailData = await emailRes.json();
+      console.log('[Contact Submission] Email service dispatch response:', emailData);
+    } catch (dispatchErr) {
+      console.warn('[Contact Submission] Note on email delivery service:', dispatchErr.message);
+    }
+
     return res.status(200).json({
       success: true,
-      message: `Thank you ${inquiry.name}! Your message has been sent successfully. Prashant will get back to you shortly.`,
+      message: `Thank you ${inquiry.name}! Your message has been received and dispatched to Prashant's Gmail.`,
       inquiryId: inquiry.id
     });
   } catch (err) {
